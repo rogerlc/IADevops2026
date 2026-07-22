@@ -1,0 +1,78 @@
+name: Repository Quality
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+permissions:
+  contents: read
+
+jobs:
+  conventional-commits:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages and pull request title
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: >-
+          python scripts/validate_conventional_commits.py
+          --base "$BASE_SHA"
+          --head "$HEAD_SHA"
+          --title "$PR_TITLE"
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: practicas/02-github-mcp-server/pyproject.toml
+
+      - name: Install project and test dependencies
+        run: python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+
+      - name: Test Conventional Commits validator
+        run: python -m unittest discover --start-directory tests --verbose
+
+      - name: Test GitHub MCP Server
+        run: python -m pytest ./practicas/02-github-mcp-server
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: practicas/02-github-mcp-server/pyproject.toml
+
+      - name: Install quality dependencies
+        run: python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+
+      - name: Run Ruff
+        run: python -m ruff check ./practicas/02-github-mcp-server ./scripts ./tests
