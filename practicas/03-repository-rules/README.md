@@ -55,6 +55,6 @@ desactivado para conservar la revisión humana antes de cada fusión.
 
 ## Estado de implementación
 
-El workflow está activo. El Ruleset permanecerá desactivado hasta que al menos
-un colaborador autorizado acepte su invitación, ya que una persona no puede
-aprobar su propio Pull Request.
+El workflow y el Ruleset `main-protection` están activos. Para completar el
+flujo, al menos un colaborador autorizado debe aceptar su invitación y aprobar
+el Pull Request, ya que una persona no puede aprobar su propio cambio.
