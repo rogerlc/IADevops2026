@@ -66,6 +66,10 @@ El Ruleset requerirá:
 - Bloqueo de force push y eliminación de `main`.
 - Aplicación sin bypass para administradores.
 
+La opción **Require approval of the most recent reviewable push** impide que la
+persona que realizó el último `push` sea quien otorgue la aprobación definitiva.
+Así se mantiene la separación entre quien entrega el cambio y quien lo revisa.
+
 El repositorio utilizará únicamente Squash merge. Auto-merge permanecerá
 desactivado para conservar la revisión humana antes de cada fusión.
 
