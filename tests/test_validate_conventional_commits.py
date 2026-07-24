@@ -2,7 +2,10 @@
 
 import unittest
 
-from scripts.validate_conventional_commits import invalid_messages, is_conventional_commit
+from scripts.validate_conventional_commits import (
+    invalid_messages,
+    is_conventional_commit,
+)
 
 
 class ConventionalCommitTests(unittest.TestCase):

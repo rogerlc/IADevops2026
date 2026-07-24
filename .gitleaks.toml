@@ -1,0 +1,22 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "database-password-assignment"
+description = "Database password assigned directly in source code"
+regex = '''(?i)(?:db|database|mysql|mariadb|postgres|postgresql|mongo|mongodb|redis)[_-]?(?:password|passwd|pwd)\s*[:=]\s*["']?[^\s"'${}<>]{8,}'''
+keywords = [
+  "db_password",
+  "db-password",
+  "database_password",
+  "database-password",
+  "mysql_password",
+  "postgres_password",
+  "mongodb_password",
+  "redis_password",
+]
+
+[rules.allowlist]
+paths = [
+  '''(^|/)\.env\.example$''',
+]
