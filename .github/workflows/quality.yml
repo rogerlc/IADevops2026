@@ -62,16 +62,26 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: practicas/02-github-mcp-server/pyproject.toml
+          cache-dependency-path: |
+            practicas/02-github-mcp-server/pyproject.toml
+            practicas/04-calculator-api/pyproject.toml
 
       - name: Install project and test dependencies
-        run: python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+        run: |
+          python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+          python -m pip install -e "./practicas/04-calculator-api[dev]"
 
       - name: Test Conventional Commits validator
         run: python -m unittest discover --start-directory tests --verbose
 
       - name: Test GitHub MCP Server
         run: python -m pytest ./practicas/02-github-mcp-server
+
+      - name: Test Calculator API
+        run: python -m pytest ./practicas/04-calculator-api
+
+      - name: Build Calculator API container
+        run: docker build --tag iadevops-calculator-api ./practicas/04-calculator-api
 
   code-quality:
     name: Code Quality
@@ -85,10 +95,19 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: practicas/02-github-mcp-server/pyproject.toml
+          cache-dependency-path: |
+            practicas/02-github-mcp-server/pyproject.toml
+            practicas/04-calculator-api/pyproject.toml
 
       - name: Install quality dependencies
-        run: python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+        run: |
+          python -m pip install -e "./practicas/02-github-mcp-server[dev]"
+          python -m pip install -e "./practicas/04-calculator-api[dev]"
 
       - name: Run Ruff
-        run: python -m ruff check ./practicas/02-github-mcp-server ./scripts ./tests
+        run: >-
+          python -m ruff check
+          ./practicas/02-github-mcp-server
+          ./practicas/04-calculator-api
+          ./scripts
+          ./tests
